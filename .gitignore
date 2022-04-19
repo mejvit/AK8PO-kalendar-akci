@@ -366,6 +366,7 @@ FodyWeavers.xsd
 /MejvitCalendarFrontend/.DS_Store
 node_modules
 /MejvitCalendarFrontend/dist
+/MejvitCalendarBackend/wwwroot
 
 
 # local env files

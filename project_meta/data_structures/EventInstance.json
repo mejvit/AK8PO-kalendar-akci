@@ -1,0 +1,14 @@
+{
+    "start": "2022-04-01 21:00:00",
+    "end": "2022-04-01 21:00:00",
+    "place": "Velké Meziříčí",
+    "name": "Zasedání zastupitelstva",
+    "streamLinks": [
+        {
+            "type": "youtube",
+            "link": "https://www.youtube.com/watch?v=WphV3fhHu_I",
+            "description": "YouTube"
+        }
+    ],
+    "note": "Po ukončení diskuse"
+}

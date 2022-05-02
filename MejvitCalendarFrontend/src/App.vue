@@ -1,29 +1,26 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> |
-    <router-link to="/events">Přidat událost</router-link> |
-    <router-link to="/places">Správa míst</router-link>
-  </div>
+<div class="app-container">
+  <nav-bar />
   <router-view/>
+</div>
 </template>
+<script>
+import { defineComponent } from 'vue'
+import NavBar from './components/NavBar.vue'
+
+export default defineComponent({
+  components: {
+    NavBar
+  }
+})
+</script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+.app-container {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-rows: 3rem auto;
 }
 
 #nav a.router-link-exact-active {

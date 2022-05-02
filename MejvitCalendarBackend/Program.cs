@@ -17,6 +17,9 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+app.UseRouting();
+app.UseAuthorization();
+app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 app.UseSpaStaticFiles();
 app.UseSpa(builder =>
 {
@@ -35,7 +38,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 
 app.MapControllers();
 

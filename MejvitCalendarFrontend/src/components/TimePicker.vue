@@ -1,25 +1,28 @@
 <template>
-<div>
-  <div class="hours">
-    <input type="text" :value="String(mDate.getHours()).padStart(2, '0')" class="py-2" placeholder="HH" />
-    <button @click="toggleHours()">
-      <span v-if="hoursSelectionVisible">&#8963;</span>
-      <span v-else>&#8964;</span>
+<div class="time-picker-wrapper">
+  <div class="hours time-part">
+    <input type="text" :value="String(mDate.getHours()).padStart(2, '0')" placeholder="hh" />
+    <button @click="toggleHours()" tabindex="-1">
+      <span v-if="hoursSelectionVisible">&#9650;</span>
+      <span v-else>&#9660;</span>
     </button>
     <ul v-if="hoursSelectionVisible" class="selector">
-      <li v-for="(hour, i) in hours" :key="i" class="time-part-item py-1 px-3">
+      <li v-for="(hour, i) in hours" :key="i" class="time-part-item">
         <span @click="setHours(hour)">{{ String(hour).padStart(2, '0') }}</span>
       </li>
     </ul>
   </div>
-  <div class="minutes">
-    <input type="text" :value="String(mDate.getMinutes()).padStart(2, '0')" class="py-2" placeholder="mm"/>
-    <button @click="toggleMinutes()" class="btn btn-primary">
-      <span v-if="minutesSelectionVisible">&#8963;</span>
-      <span v-else>&#8964;</span>
+  <div class="delimiter">
+    <span>:</span>
+  </div>
+  <div class="minutes time-part">
+    <input type="text" :value="String(mDate.getMinutes()).padStart(2, '0')" id="minuteSelector" placeholder="mm"/>
+    <button @click="toggleMinutes()" tabindex="-1">
+      <span v-if="minutesSelectionVisible">&#9650;</span>
+      <span v-else>&#9660;</span>
     </button>
     <ul v-if="minutesSelectionVisible" class="selector">
-      <li v-for="(minute, i) in minutes" :key="i" class="time-part-item py-1 px-3">
+      <li v-for="(minute, i) in minutes" :key="i" class="time-part-item">
         <span @click="setMinutes(minute)">{{ String(minute).padStart(2, '0') }}</span>
       </li>
     </ul>
@@ -31,7 +34,7 @@
 import { defineComponent, ref, toRef } from 'vue'
 
 export default defineComponent({
-  name: 'DateTimePicker',
+  name: 'TimePicker',
   emits: ['update:modelValue'],
   props: {
     modelValue: {
@@ -91,26 +94,49 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.hours {
-  display: inline-block;
+.time-picker-wrapper {
+  width: 16rem;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+.time-part {
+  margin: 0 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
 }
 
-.minutes {
-  display: inline-block;
+.delimiter {
+  cursor: default;
+  font-size: 1.5rem;
 }
 
 .selector {
   position: fixed;
+  width: 3rem;
+  margin: 2.8rem 0 0 -2rem;
+  padding: 0;
   height: 50vh;
   overflow-y: scroll;
 }
 
 .selector li {
+  width: 3rem;
+  font-size: 1.2rem;
   text-align: right;
 }
 
 .selector li.time-part-item {
+  display: block;
+  padding: 0.2rem;
   list-style: none;
+  width: 100%;
+}
+
+.selector li.time-part-item:nth-child(2n+1) {
+  background: #ffffff;
 }
 
 .selector li.time-part-item:nth-child(2n) {
@@ -119,5 +145,38 @@ export default defineComponent({
 
 .selector li span:hover {
   cursor: pointer;
+}
+
+.time-part input[type=text]
+{
+  width: 3rem;
+  height: 100%;
+  border-top: 1px solid #5f5f5f;
+  border-right: 0;
+  border-bottom: 1px solid #5f5f5f;
+  border-left: 1px solid #5f5f5f;
+  outline: 0;
+  margin: 0;
+  padding: 0.2rem 0.2rem 0.2rem 0.4rem;
+
+  font-size: 1.5rem;
+  text-align: center;
+  border-top-left-radius: 0.3rem;
+  border-bottom-left-radius: 0.3rem;
+}
+
+.time-part button {
+  width: 2rem;
+  height: 100%;
+  padding: 0.2rem;
+  font-size: 0.8rem;
+  color: #666666;
+  background: #e3e3e3;
+  border-top: 1px solid #5f5f5f;
+  border-right: 1px solid #5f5f5f;
+  border-bottom: 1px solid #5f5f5f;
+  border-left: 0;
+  border-top-right-radius: 0.3rem;
+  border-bottom-right-radius: 0.3rem;
 }
 </style>

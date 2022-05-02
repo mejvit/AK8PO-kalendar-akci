@@ -8,12 +8,12 @@ const routes: Array<RouteRecordRaw> = [
     component: Home
   },
   {
-    path: '/about',
-    name: 'About',
+    path: '/single-events',
+    name: 'SingleEvents',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/SingleEvents.vue')
   },
   {
     path: '/events',
@@ -29,7 +29,30 @@ const routes: Array<RouteRecordRaw> = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Places.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/places/Places.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('../views/places/PlacesIndex.vue')
+      },
+      {
+        path: ':code',
+        component: () => import(/* webpackChunkName: "about" */ '../views/places/PlacesDetail.vue')
+      }
+    ]
+  },
+  // {
+  //   path: '/places/:code',
+  //   name: 'PlacesDetail',
+  //   component: () => import('../views/places/PlacesDetail.vue')
+  // },
+  {
+    path: '/categories',
+    name: 'Categories',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/Categories.vue')
   }
 ]
 

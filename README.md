@@ -5,7 +5,7 @@ Obvyklou vlastností takových akcí bývá jejich pravidelné opakování. V ap
 Aplikace shromažďuje různé organizace, které pořádají tyto události. Událost pak má odkaz, kde je možné shlédnout přenos, dále volitelný časový plán podle kterého se opakuje a kategorii, do které událost spadá.
 Dokumentace z hlediska modelování aplikace je k nalezení v následujících souborech:
 
- - Scénář: [a relative link](project_meta/scenario.md)
- - Požadavky [a relative link](project_meta/requirements.md)
- - Použité technologie [a relative link](project_meta/technologies.md)
- - Časový plán [a relative link](project_meta/timeplan.md)
+ - [Scénář](project_meta/scenario.md)
+ - [Požadavky](project_meta/requirements.md)
+ - [Použité technologie](project_meta/technologies.md)
+ - [Časový plán](project_meta/timeplan.md)

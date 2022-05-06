@@ -11,7 +11,7 @@
     />
     <edit-modal title="Vytvořit kategorii"
       :visible="editDialogVisible"
-      @dismiss-clicked="hideCreateDialog"
+      @dismiss-clicked="() => { editDialogVisible = false }"
       v-on="createModeActive ? {confirmClicked: () => { createCategory() }} : {confirmClicked: () => { editCategory() }}"
     >
     <div class="input-group">
@@ -28,7 +28,14 @@
           <label for="placeCode">Kód</label>
         </div>
         <div class="input-field">
-          <input type="text" v-model="activeCategory.code" id="placeCode">
+          <input type="text" v-model="activeCategory.code" id="placeCode" v-if="editCodeActive">
+          <span v-else>{{ activeCategory.code }}</span>
+          <button @click="() => { editCodeActive = false }" v-if="editCodeActive && !createModeActive" class="edit-toggle">
+            <i class="bi bi-x-square-fill"></i>
+          </button>
+          <button @click="() => { editCodeActive = true }" class="edit-toggle" v-else-if="!editCodeActive">
+            <i class="bi bi-pencil-fill"></i>
+          </button>
         </div>
       </div>
     </div>
@@ -66,12 +73,7 @@ export default defineComponent({
 
     const editDialogVisible = ref<boolean>(false)
     const createModeActive = ref<boolean>(false)
-
-    const showCreateDialog = () => {
-      createModeActive.value = true
-      editDialogVisible.value = true
-    }
-    const hideCreateDialog = () => { editDialogVisible.value = false }
+    const editCodeActive = ref<boolean>(false)
 
     axios.get<Array<EventCategory>>('/api/categories')
       .then(function (response) {
@@ -114,13 +116,17 @@ export default defineComponent({
 
     const showEditDialog = (id?: number) => {
       if (id !== undefined) {
+        editCodeActive.value = false
         createModeActive.value = false
         const filteredCategory: EventCategory = categories.value.filter((cat: EventCategory) => cat.id === id)[0]
         activeCategory.id = filteredCategory.id
         activeCategory.code = filteredCategory.code
         activeCategory.name = filteredCategory.name
-        console.log(activeCategory)
       } else {
+        activeCategory.id = undefined
+        activeCategory.code = ''
+        activeCategory.name = ''
+        editCodeActive.value = true
         createModeActive.value = true
       }
       editDialogVisible.value = true
@@ -133,14 +139,26 @@ export default defineComponent({
       deleteEntity,
       deleteDialogVisible,
       editCategory,
+      editCodeActive,
       editDialogVisible,
-      hideCreateDialog,
       hideDeleteDialog,
       idToDelete,
-      showCreateDialog,
       showEditDialog,
       showDeleteDialog
     }
   }
 })
 </script>
+
+<style scoped>
+  .edit-toggle {
+    border: 0;
+    background: transparent;
+    margin-left: 0.5em;
+  }
+
+  .edit-toggle:hover {
+    cursor: pointer;
+    background: #eaeaea;
+  }
+</style>

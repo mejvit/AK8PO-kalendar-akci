@@ -3,16 +3,16 @@
     <div class="modal-content">
       <header>
         <h3>{{ title }}</h3>
-        <button class="close-button" @click="$emit('dismissClicked')">&times;</button>
+        <button class="close-button" @click="$emit('dismissClick')">&times;</button>
       </header>
       <div class="modal-body">
         <slot></slot>
       </div>
       <footer>
-        <button @click="$emit('confirmClicked')" class="button-confirm">
+        <button @click="$emit('confirmClick')" class="button-confirm">
           <i class="bi bi-check-square-fill"></i> Uložit
         </button>
-        <button @click="$emit('dismissClicked')" class="button-dismiss">
+        <button @click="$emit('dismissClick')" class="button-dismiss">
           <i class="bi bi-x-square-fill"></i> Zrušit
         </button>
       </footer>
@@ -25,7 +25,7 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'EditModal',
-  emits: ['confirmClicked', 'dismissClicked', 'update:visible'],
+  emits: ['confirmClick', 'dismissClick'],
   props: {
     title: String,
     visible: {
@@ -107,10 +107,12 @@ export default defineComponent({
     color: #333333;
     background: #eaeaea;
     transition: 0.3s;
+    border-radius: 0.25rem;
   }
 
   .modal-content footer button i {
     margin-right: 0.5em;
+    border-radius: 0.25rem;
   }
 
   .modal-content footer button:hover {
@@ -138,9 +140,11 @@ export default defineComponent({
 
   .button-confirm:hover i {
     color: #eaeaea;
+    transition: 0.3s;
   }
 
   .button-dismiss:hover i {
     color: #eaeaea;
+    transition: 0.3s;
   }
 </style>

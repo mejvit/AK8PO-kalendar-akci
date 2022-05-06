@@ -2,11 +2,7 @@
     <h1>Správa míst</h1>
     <button @click="showCreateDialog" class="button-add">Vytvořit místo</button>
     <input v-model="placesFilter" />
-    <ul>
-      <li v-for="(place, i) in filteredPlaces" :key="i">
-        <router-link :to="'/places/'+place.code">{{ place.name }}</router-link>
-      </li>
-    </ul>
+    <detail-item v-for="(place, i) in filteredPlaces" :key="i" :name="place.name" :to="'/places/'+place.code" />
     <edit-modal :visible="createDialogOpened" @update:visible="hideCreateDialog" title="Vytvořit místo">
       <div>
         <label for="placeName">Název</label>
@@ -29,10 +25,11 @@ import axios from 'axios'
 import { Place } from '../../composables/Place'
 import { convertNameToCode } from '../../composables/Parser'
 import EditModal from '../../components/EditModal.vue'
+import DetailItem from '../../components/DetailItem.vue'
 
 export default defineComponent({
   name: 'PlacesDetail',
-  components: { EditModal },
+  components: { DetailItem, EditModal },
 
   setup () {
     const newPlace = reactive<Place>({ name: '', code: '' })

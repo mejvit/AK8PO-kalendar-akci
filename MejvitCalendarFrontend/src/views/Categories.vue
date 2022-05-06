@@ -11,8 +11,8 @@
     />
     <edit-modal title="Vytvořit kategorii"
       :visible="editDialogVisible"
-      @dismiss-clicked="() => { editDialogVisible = false }"
-      v-on="createModeActive ? {confirmClicked: () => { createCategory() }} : {confirmClicked: () => { editCategory() }}"
+      @dismiss-click="() => { editDialogVisible = false }"
+      v-on="createModeActive ? {confirmClick: () => { createCategory() }} : {confirmClick: () => { editCategory() }}"
     >
     <div class="input-group">
       <div class="input-row">
@@ -43,8 +43,8 @@
     <delete-modal
       :id="idToDelete"
       :visible="deleteDialogVisible"
-      @update:visible="hideDeleteDialog"
-      @delete-confirm="(id) => { deleteEntity(id, '/api/categories/') }"
+      @dismiss-click="() => { deleteDialogVisible = false }"
+      @confirm-click="(id) => { deleteEntity(id, '/api/categories/') }"
     />
   </main-area>
 </template>

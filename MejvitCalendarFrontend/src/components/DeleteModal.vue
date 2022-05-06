@@ -3,12 +3,16 @@
     <div class="modal-content">
       <header>
         <h3>Smazat záznam?</h3>
-        <button class="close-button" @click="$emit('update:visible', $event.target.value)">&times;</button>
+        <button class="close-button" @click="$emit('dismissClick')">&times;</button>
       </header>
-      <div class="modal-body">
-        <button @click="deleteConfirm">Smazat</button>
-        <button @click="deleteCancel">Zrušit</button>
-      </div>
+      <footer>
+        <button @click="$emit('confirmClick')" class="button-confirm">
+          <i class="bi bi-check-square-fill"></i> Smazat
+        </button>
+        <button @click="$emit('dismissClick')" class="button-dismiss">
+          <i class="bi bi-x-square-fill"></i> Zrušit
+        </button>
+      </footer>
     </div>
   </div>
 </template>
@@ -18,27 +22,12 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'DeleteModal',
-  emits: ['deleteConfirm', 'deleteCancel', 'update:visible'],
+  emits: ['confirmClick', 'dismissClick'],
   props: {
     id: Number,
     visible: {
       type: Boolean,
       required: true
-    }
-  },
-  setup (props, context) {
-    const deleteConfirm = function () {
-      console.log(props.id)
-      context.emit('deleteConfirm', props.id)
-      context.emit('update:visible', false)
-    }
-    const deleteCancel = function () {
-      context.emit('deleteCancel')
-      context.emit('update:visible', false)
-    }
-    return {
-      deleteCancel,
-      deleteConfirm
     }
   }
 })
@@ -52,18 +41,18 @@ export default defineComponent({
     right: 0;
     bottom: 0;
     left: 0;
-
-    padding: 10%;
-
     background: #00000088;
+    display: flex;
   }
 
   .modal-content {
     z-index: 99;
     background: #ffffff;
     border-radius: 0.8rem;
-    width: 100%;
-    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: auto auto;
   }
 
   .modal-content header {
@@ -80,7 +69,7 @@ export default defineComponent({
     border: 0;
     background: transparent;
     transition: 0.3s;
-    color: #000000;
+    color: #333333;
     text-shadow: 1px 1px #fff;
     font-size: 2rem;
     margin-right: 0.3em;
@@ -93,10 +82,67 @@ export default defineComponent({
   }
 
   .modal-content header h3 {
+    color: #333333;
     padding: 0.5em 1em;
   }
 
   .modal-content .modal-body {
     padding: 1em;
+  }
+
+  .modal-content footer {
+    display: flex;
+    justify-content: center;
+  }
+
+  .modal-content footer button {
+    font-size: 1.1em;
+    margin: 1em;
+    padding: 0.5em 1em;
+    border: 0;
+    color: #333333;
+    background: #eaeaea;
+    transition: 0.3s;
+    border-radius: 0.25rem;
+  }
+
+  .modal-content footer button i {
+    margin-right: 0.5em;
+    border-radius: 0.25rem;
+  }
+
+  .modal-content footer button:hover {
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .button-confirm i {
+    color: #3a9439;
+    transition: 0.3s;
+  }
+
+  .button-dismiss i {
+    color: #dc143c;
+    transition: 0.3s;
+  }
+
+  .button-confirm:hover {
+    color: #eaeaea;
+    background: #3a9439;
+  }
+
+  .button-dismiss:hover {
+    color: #eaeaea;
+    background: #dc143c;
+  }
+
+  .button-confirm:hover i {
+    color: #eaeaea;
+    transition: 0.3s;
+  }
+
+  .button-dismiss:hover i {
+    color: #eaeaea;
+    transition: 0.3s;
   }
 </style>

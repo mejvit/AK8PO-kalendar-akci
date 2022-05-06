@@ -1,26 +1,37 @@
 <template>
   <main-area>
     <h1>Správa kategorií</h1>
-    <button @click="showCreateDialog" class="button-add">Vytvořit kategorii</button>
+    <button @click="showEditDialog()" class="button-add">Vytvořit kategorii</button>
     <editable-item
       v-for="(category, i) in categories" :key="i"
       :id="category.id"
       :name="category.name"
       @delete-clicked="(id) => { showDeleteDialog(id) }"
+      @edit-clicked="(id) => { showEditDialog(id) }"
     />
-    <edit-modal :visible="createDialogOpened" @update:visible="hideCreateDialog" title="Vytvořit kategorii">
-      <div>
-        <label for="placeName">Název</label>
-        <input type="text" v-model="newCategory.name" id="placeName">
+    <edit-modal title="Vytvořit kategorii"
+      :visible="editDialogVisible"
+      @dismiss-clicked="hideCreateDialog"
+      v-on="createModeActive ? {confirmClicked: () => { createCategory() }} : {confirmClicked: () => { editCategory() }}"
+    >
+    <div class="input-group">
+      <div class="input-row">
+        <div class="input-field">
+          <label for="placeName">Název</label>
+        </div>
+        <div class="input-field">
+          <input type="text" v-model="activeCategory.name" id="placeName">
+        </div>
       </div>
-      <div>
-        <label for="placeCode">Kód</label>
-        <input type="text" v-model="newCategory.code" id="placeCode">
+      <div class="input-row">
+        <div class="input-field">
+          <label for="placeCode">Kód</label>
+        </div>
+        <div class="input-field">
+          <input type="text" v-model="activeCategory.code" id="placeCode">
+        </div>
       </div>
-      <div class="modal-buttons">
-        <button @click="createCategory">Ok</button>
-        <button @click="hideCreateDialog">Zrušit</button>
-      </div>
+    </div>
     </edit-modal>
     <delete-modal
       :id="idToDelete"
@@ -46,11 +57,21 @@ export default defineComponent({
   name: 'Events',
   components: { DeleteModal, EditableItem, EditModal, MainArea },
   setup () {
-    const newCategory = reactive<EventCategory>({ name: '', code: '' })
     const categories = ref<Array<EventCategory>>([])
-    const createDialogOpened = ref<boolean>(false)
-    const showCreateDialog = () => { createDialogOpened.value = true }
-    const hideCreateDialog = () => { createDialogOpened.value = false }
+    const activeCategory = reactive<EventCategory>({
+      id: undefined,
+      name: '',
+      code: ''
+    })
+
+    const editDialogVisible = ref<boolean>(false)
+    const createModeActive = ref<boolean>(false)
+
+    const showCreateDialog = () => {
+      createModeActive.value = true
+      editDialogVisible.value = true
+    }
+    const hideCreateDialog = () => { editDialogVisible.value = false }
 
     axios.get<Array<EventCategory>>('/api/categories')
       .then(function (response) {
@@ -66,13 +87,16 @@ export default defineComponent({
         // always executed
       })
 
-    watch(() => newCategory.name, (newName) => {
-      newCategory.code = convertNameToCode(newName)
+    watch(() => activeCategory.name, (newName) => {
+      if (createModeActive.value) {
+        activeCategory.code = convertNameToCode(newName)
+      }
     })
 
     const createCategory = function () {
-      axios.post('/api/categories', newCategory)
+      axios.post('/api/categories', activeCategory)
         .then(response => console.log(response))
+        .then(hideDeleteDialog)
     }
 
     const idToDelete = ref<number | null>(null)
@@ -82,18 +106,39 @@ export default defineComponent({
       idToDelete.value = id
     }
     const hideDeleteDialog = () => { deleteDialogVisible.value = false }
+    const editCategory = () => {
+      axios.put('/api/categories/' + activeCategory.id, activeCategory)
+        .then(response => console.log(response))
+        .then(hideDeleteDialog)
+    }
 
+    const showEditDialog = (id?: number) => {
+      if (id !== undefined) {
+        createModeActive.value = false
+        const filteredCategory: EventCategory = categories.value.filter((cat: EventCategory) => cat.id === id)[0]
+        activeCategory.id = filteredCategory.id
+        activeCategory.code = filteredCategory.code
+        activeCategory.name = filteredCategory.name
+        console.log(activeCategory)
+      } else {
+        createModeActive.value = true
+      }
+      editDialogVisible.value = true
+    }
     return {
+      activeCategory,
       categories,
       createCategory,
-      createDialogOpened,
+      createModeActive,
       deleteEntity,
       deleteDialogVisible,
+      editCategory,
+      editDialogVisible,
       hideCreateDialog,
       hideDeleteDialog,
       idToDelete,
-      newCategory,
       showCreateDialog,
+      showEditDialog,
       showDeleteDialog
     }
   }

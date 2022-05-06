@@ -4,7 +4,7 @@
     {
         public EventCategory Category { get; set; }
 
-        public EventTemplate EventTemplate { get; set; }
+        public EventBase EventBase { get; set; }
         public Place Place { get; set; }
     }
 }

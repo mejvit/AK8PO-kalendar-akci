@@ -8,7 +8,7 @@
       <router-link to="/single-events">Přehled událostí</router-link>
     </li>
     <li>
-      <router-link to="/events">Přehled míst</router-link>
+      <router-link to="/events">Správa událostí</router-link>
     </li>
     <li>
       <router-link to="/places">Správa míst</router-link>

@@ -10,6 +10,7 @@ namespace MejvitCalendarBackend.Data
 
         }
         public DbSet<Place> Places { get; set; }
+        public DbSet<EventBase> Events { get; set; }
         public DbSet<EventCategory> Categories { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -40,6 +40,26 @@ namespace MejvitCalendarBackend.Controllers
             }
         }
 
+        [Route("api/categories/{id}")]
+        [HttpPut]
+        public async Task<IActionResult> Update(int id, [FromBody] EventCategory updatedCategory)
+        {
+            if (updatedCategory == null || updatedCategory.Id != id)
+            {
+                return BadRequest();
+            }
+
+            var category = await _context.Categories.FindAsync(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            _context.Entry<EventCategory>(category).CurrentValues.SetValues(updatedCategory);
+            await _context.SaveChangesAsync();
+
+            return new NoContentResult();
+        }
+
 
         [Route("api/categories/{id}")]
         [HttpDelete]

@@ -5,8 +5,13 @@
         <h3>Smazat záznam?</h3>
         <button class="close-button" @click="$emit('dismissClick')">&times;</button>
       </header>
+        <Transition>
+          <div class="modal-body" v-if="responseMessage != ''">
+            <p>{{ responseMessage }}</p>
+          </div>
+        </Transition>
       <footer>
-        <button @click="$emit('confirmClick')" class="button-confirm">
+        <button @click="$emit('confirmClick', id)" class="button-confirm">
           <i class="bi bi-check-square-fill"></i> Smazat
         </button>
         <button @click="$emit('dismissClick')" class="button-dismiss">
@@ -28,7 +33,8 @@ export default defineComponent({
     visible: {
       type: Boolean,
       required: true
-    }
+    },
+    responseMessage: String
   }
 })
 </script>
@@ -116,6 +122,11 @@ export default defineComponent({
     transition: 0.3s;
   }
 
+  .modal-body p {
+    padding: 0;
+    margin: 0;
+  }
+
   .button-confirm i {
     color: #3a9439;
     transition: 0.3s;
@@ -144,5 +155,17 @@ export default defineComponent({
   .button-dismiss:hover i {
     color: #eaeaea;
     transition: 0.3s;
+  }
+
+  /* we will explain what these classes do next! */
+  .v-enter-active,
+  .v-leave-active {
+    transition: 0.5s ease;
+  }
+
+  .v-enter-from,
+  .v-leave-to {
+    opacity: 0;
+    padding: 0;
   }
 </style>

@@ -15,7 +15,7 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style lang="scss">
 .app-container {
   min-height: 100vh;
   display: grid;

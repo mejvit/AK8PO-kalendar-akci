@@ -11,7 +11,7 @@
       <router-link to="/events">Správa událostí</router-link>
     </li>
     <li>
-      <router-link to="/places">Správa míst</router-link>
+      <router-link to="/places">Správa organizací</router-link>
     </li>
     <li>
       <router-link to="/categories">Správa kategorií</router-link>
@@ -77,5 +77,9 @@ export default defineComponent({
   text-shadow: 1px 1px #fff;
   background: #a794d6;
   transition: 0.5s;
+}
+
+.navbar .router-link-active {
+  font-weight: bold;
 }
 </style>

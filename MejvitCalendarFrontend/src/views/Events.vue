@@ -8,9 +8,15 @@
   </side-bar>
   <main-area>
     <h1>Přidat událost</h1>
-    <datepicker v-model="startTime" :locale="cs" />
+    <datepicker class="date" style="display: inline-block;"
+      v-model="startTime" :locale="cs" inputFormat="dd. MM. yyyy"
+    />
     <time-picker  v-model="startTime" />
-    <input type="text" :value="eventName">
+    <span> — </span>
+    <time-picker  v-model="endTime" />
+    <datepicker class="date"
+      v-model="endTime" :locale="cs" inputFormat="dd. MM. yyyy"
+    />
     <input id="isRecurrent" type="checkbox" @change="() => {isRecurrent = !isRecurrent}"><label for="isRecurrent">Opakující se událost</label>
     <div v-if="isRecurrent">
       <h3>Opakování</h3>
@@ -29,13 +35,13 @@
         </dd>
         <dt v-if="rruleOptions.freq == RRule.WEEKLY"><label for="rruleByDay">Dny</label></dt>
         <dd v-if="rruleOptions.freq == RRule.WEEKLY">
-          <input type="checkbox" id="rruleByWeekDayMo" :value="0" v-model="rruleOptions.byweekday" /><label for="rruleByWeekDayMo">Po</label>
-          <input type="checkbox" id="rruleByWeekDayTu" :value="1" v-model="rruleOptions.byweekday" /><label for="rruleByWeekDayTu">Út</label>
-          <input type="checkbox" id="rruleByWeekDayWe" :value="2" v-model="rruleOptions.byweekday" /><label for="rruleByWeekDayWe">St</label>
-          <input type="checkbox" id="rruleByWeekDayTh" :value="3" v-model="rruleOptions.byweekday" /><label for="rruleByWeekDayTh">Čt</label>
-          <input type="checkbox" id="rruleByWeekDayFr" :value="4" v-model="rruleOptions.byweekday" /><label for="rruleByWeekDayFr">Pá</label>
-          <input type="checkbox" id="rruleByWeekDaySa" :value="5" v-model="rruleOptions.byweekday" /><label for="rruleByWeekDaySa">So</label>
-          <input type="checkbox" id="rruleByWeekDaySu" :value="6" v-model="rruleOptions.byweekday" /><label for="rruleByWeekDaySu">Ne</label>
+          <input type="checkbox" id="rruleByWeekDayMo" :value="0" /><label for="rruleByWeekDayMo">Po</label>
+          <input type="checkbox" id="rruleByWeekDayTu" :value="1" /><label for="rruleByWeekDayTu">Út</label>
+          <input type="checkbox" id="rruleByWeekDayWe" :value="2" /><label for="rruleByWeekDayWe">St</label>
+          <input type="checkbox" id="rruleByWeekDayTh" :value="3" /><label for="rruleByWeekDayTh">Čt</label>
+          <input type="checkbox" id="rruleByWeekDayFr" :value="4" /><label for="rruleByWeekDayFr">Pá</label>
+          <input type="checkbox" id="rruleByWeekDaySa" :value="5" /><label for="rruleByWeekDaySa">So</label>
+          <input type="checkbox" id="rruleByWeekDaySu" :value="6" /><label for="rruleByWeekDaySu">Ne</label>
         </dd>
 
         <dt><label for="rruleByDay">Vždy</label></dt>
@@ -47,7 +53,11 @@
       <h3>Končí</h3>
       <dl>
         <dt><label for="rruleUntil">Datum</label></dt>
-        <dd><datepicker id="rruleUntil" v-model="rruleOptions.until" :locale="cs" /></dd>
+        <dd>
+          <datepicker id="rruleUntil" class="date"
+            v-model="rruleOptions.until" :locale="cs" inputFormat="dd. MM. yyyy"
+          />
+        </dd>
         <dt><label for="rruleCount">Po</label></dt>
         <dd><input id="rruleCount" type="number" v-model="rruleOptions.count"/><label for="rruleCount"> opakováních</label></dd>
       </dl>
@@ -64,7 +74,7 @@ import axios from 'axios'
 import { Place } from '../composables/Place'
 import SideBar from '../components/SideBar.vue' // @ is an alias to /src
 import MainArea from '../components/MainArea.vue' // @ is an alias to /src
-import TimePicker from '../components/TimePicker.vue' // @ is an alias to /src
+import TimePicker from '../components/inputs/TimePicker.vue' // @ is an alias to /src
 import Datepicker from 'vue3-datepicker'
 import { cs } from 'date-fns/locale'
 import { Options as RRuleOptions, RRule } from 'rrule'
@@ -75,6 +85,7 @@ export default defineComponent({
     Datepicker, MainArea, SideBar, TimePicker
   },
   setup () {
+    const endTime = ref<Date>(new Date())
     const startTime = ref<Date>(new Date())
     const rruleOptions: RRuleOptions = reactive({
       freq: RRule.WEEKLY,
@@ -119,6 +130,7 @@ export default defineComponent({
       console.log(new RRule(rruleOptions).toString())
     }
     return {
+      endTime,
       eventName,
       isRecurrent,
       places,
@@ -131,3 +143,9 @@ export default defineComponent({
   }
 })
 </script>
+
+<style scoped>
+  .v3dp__datepicker {
+    display: inline-block;
+  }
+</style>

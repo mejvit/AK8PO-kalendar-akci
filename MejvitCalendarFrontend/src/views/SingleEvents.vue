@@ -45,7 +45,7 @@ import { defineComponent, ref } from 'vue'
 import axios from 'axios'
 import { Place } from '../composables/Place'
 import MainArea from '../components/MainArea.vue' // @ is an alias to /src
-import TimePicker from '../components/TimePicker.vue' // @ is an alias to /src
+import TimePicker from '../components/inputs/TimePicker.vue' // @ is an alias to /src
 import Datepicker from 'vue3-datepicker'
 import { cs } from 'date-fns/locale'
 

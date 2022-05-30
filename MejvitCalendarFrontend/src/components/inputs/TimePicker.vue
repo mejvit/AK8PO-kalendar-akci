@@ -1,10 +1,12 @@
 <template>
 <div class="time-picker-wrapper">
   <div class="hours time-part">
-    <input type="text" :value="String(mDate.getHours()).padStart(2, '0')" placeholder="hh" />
-    <button @click="toggleHours()" tabindex="-1">
-      <span v-if="hoursSelectionVisible">&#9650;</span>
-      <span v-else>&#9660;</span>
+    <input type="text" :value="String(mDate.getHours()).padStart(2, '0')" ref="hours" placeholder="hh"
+      @focus="$event.target.select()"
+    />
+    <button @click="() => { $refs.hours.select(); toggleHours() }" tabindex="-1">
+      <i v-if="hoursSelectionVisible" class="bi bi-caret-up-fill"></i>
+      <i v-else class="bi bi-caret-down-fill"></i>
     </button>
     <ul v-if="hoursSelectionVisible" class="selector">
       <li v-for="(hour, i) in hours" :key="i" class="time-part-item">
@@ -12,14 +14,13 @@
       </li>
     </ul>
   </div>
-  <div class="delimiter">
-    <span>:</span>
-  </div>
   <div class="minutes time-part">
-    <input type="text" :value="String(mDate.getMinutes()).padStart(2, '0')" id="minuteSelector" placeholder="mm"/>
-    <button @click="toggleMinutes()" tabindex="-1">
-      <span v-if="minutesSelectionVisible">&#9650;</span>
-      <span v-else>&#9660;</span>
+    <input type="text" :value="String(mDate.getMinutes()).padStart(2, '0')" id="minuteSelector" ref="minutes" placeholder="mm"
+      @focus="$event.target.select()"
+    />
+    <button @click="() => { $refs.minutes.select(); toggleMinutes() }" tabindex="-1">
+      <i v-if="minutesSelectionVisible" class="bi bi-caret-up-fill"></i>
+      <i v-else class="bi bi-caret-down-fill"></i>
     </button>
     <ul v-if="minutesSelectionVisible" class="selector">
       <li v-for="(minute, i) in minutes" :key="i" class="time-part-item">
@@ -95,27 +96,23 @@ export default defineComponent({
 
 <style scoped>
 .time-picker-wrapper {
-  width: 16rem;
   box-sizing: border-box;
-  display: flex;
-  justify-content: center;
+  display: inline-flex;
+  justify-content: left;
   align-items: stretch;
+  background: #eaeaea;
+  border-radius: 2px;
 }
 .time-part {
-  margin: 0 0.5rem;
+  margin: 0;
   display: flex;
   justify-content: center;
   align-items: stretch;
-}
-
-.delimiter {
-  cursor: default;
-  font-size: 1.5rem;
 }
 
 .selector {
   position: fixed;
-  width: 3rem;
+  width: 2em;
   margin: 2.8rem 0 0 -2rem;
   padding: 0;
   height: 50vh;
@@ -149,34 +146,21 @@ export default defineComponent({
 
 .time-part input[type=text]
 {
-  width: 3rem;
-  height: 100%;
-  border-top: 1px solid #5f5f5f;
-  border-right: 0;
-  border-bottom: 1px solid #5f5f5f;
-  border-left: 1px solid #5f5f5f;
+  display: block;
+  width: 2rem;
   outline: 0;
   margin: 0;
-  padding: 0.2rem 0.2rem 0.2rem 0.4rem;
-
-  font-size: 1.5rem;
+  /*padding: 0.2rem 0.2rem 0.2rem 0.4rem;*/
+  /* font-size: 1.5rem; */
   text-align: center;
-  border-top-left-radius: 0.3rem;
-  border-bottom-left-radius: 0.3rem;
 }
 
 .time-part button {
-  width: 2rem;
-  height: 100%;
-  padding: 0.2rem;
+  display: block;
   font-size: 0.8rem;
   color: #666666;
-  background: #e3e3e3;
-  border-top: 1px solid #5f5f5f;
-  border-right: 1px solid #5f5f5f;
-  border-bottom: 1px solid #5f5f5f;
+  background: transparent;
+  border: 0;
   border-left: 0;
-  border-top-right-radius: 0.3rem;
-  border-bottom-right-radius: 0.3rem;
 }
 </style>

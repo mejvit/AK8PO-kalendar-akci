@@ -5,7 +5,7 @@
         <strong>{{ name }}</strong>
       </router-link>
     </div>
-    <button class="delete" @click="$emit('deleteClicked', id)">
+    <button class="delete" @click="$emit('deleteClick', id)">
       <i class="bi bi-trash3-fill"></i>
     </button>
   </div>
@@ -21,7 +21,7 @@ export default defineComponent({
     id: Number,
     to: String
   },
-  emits: ['deleteClicked'],
+  emits: ['deleteClick'],
   setup () {
     const editMode = ref<boolean>(false)
     const switchMode = () => { editMode.value = !editMode.value }

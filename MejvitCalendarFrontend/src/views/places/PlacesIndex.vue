@@ -1,54 +1,90 @@
 <template>
-    <h1>Správa míst</h1>
-    <button @click="showCreateDialog" class="button-add">Vytvořit místo</button>
-    <input v-model="placesFilter" />
-    <detail-item v-for="(place, i) in filteredPlaces" :key="i" :name="place.name" :to="'/places/'+place.code" />
-    <edit-modal :visible="createDialogOpened" @update:visible="hideCreateDialog" title="Vytvořit místo">
-      <div>
-        <label for="placeName">Název</label>
-        <input type="text" v-model="newPlace.name" id="placeName">
+  <h1>Správa organizací</h1>
+  <div class="overview-header">
+    <button @click="showCreateDialog" class="button-add">Vytvořit organizaci</button>
+    <filter-input v-model="placesFilter"/>
+  </div>
+  <detail-item
+    v-for="(place, i) in filteredPlaces" :key="i"
+    :id="place.id"
+    :name="place.name" :to="'/places/'+place.code"
+    @delete-click="(id) => { visibility.deleteModal = true; idToDelete = id }"
+  />
+  <edit-modal
+    :visible="createDialogOpened" @update:visible="hideCreateDialog" title="Vytvořit organizaci"
+    @dismiss-click="() => { createDialogOpened = false }"
+    @confirmClick="createPlace"
+  >
+    <div class="input-group">
+      <div class="input-row">
+        <div class="input-field">
+          <label for="categoryName">Název</label>
+        </div>
+        <div class="input-field">
+          <input type="text" v-model="newPlace.name" id="placeName">
+        </div>
       </div>
-      <div>
-        <label for="placeCode">Kód</label>
-        <input type="text" v-model="newPlace.code" id="placeCode">
+      <div class="input-row">
+        <div class="input-field">
+          <label for="categoryCode">Kód</label>
+        </div>
+        <div class="input-field">
+          <input type="text" v-model="newPlace.code" id="placeCode">
+        </div>
       </div>
-      <div class="modal-buttons">
-        <button @click="createPlace">Ok</button>
-        <button @click="hideCreateDialog">Zrušit</button>
-      </div>
-    </edit-modal>
+    </div>
+  </edit-modal>
+  <delete-modal
+    :id="idToDelete"
+    :visible="visibility.deleteModal"
+    @dismiss-click="() => { visibility.deleteModal = false }"
+    @confirm-click="(id) => { deleteEntity(id, '/api/places/').then(() => {visibility.deleteModal = false; fetchPlaces()}) }"
+  />
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, watch } from 'vue'
+import { computed, defineComponent, onMounted, reactive, ref, watch } from 'vue'
 import axios from 'axios'
 import { Place } from '../../composables/Place'
+import { deleteEntity } from '../../composables/api/apiCommunication'
 import { convertNameToCode } from '../../composables/Parser'
+import DeleteModal from '@/components/DeleteModal.vue'
 import EditModal from '../../components/EditModal.vue'
-import DetailItem from '../../components/DetailItem.vue'
+import DetailItem from '@/components/DetailItem.vue'
+import FilterInput from '@/components/inputs/FilterInput.vue'
 
 export default defineComponent({
   name: 'PlacesDetail',
-  components: { DetailItem, EditModal },
+  components: { DeleteModal, DetailItem, EditModal, FilterInput },
 
   setup () {
-    const newPlace = reactive<Place>({ name: '', code: '' })
+    const visibility = reactive({
+      deleteModal: false
+    })
+    const newPlace = reactive<Place>({ id: undefined, name: '', code: '' })
     const placesFilter = ref<string>('')
     const places = ref<Array<Place>>([])
+    const idToDelete = ref<number>()
 
-    axios.get<Array<Place>>('/api/places')
-      .then(function (response) {
-        // handle success
-        console.log(response.data)
-        places.value = response.data
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error)
-      })
-      .then(function () {
-        // always executed
-      })
+    onMounted(() => {
+      fetchPlaces()
+    })
+
+    const fetchPlaces = function () {
+      axios.get<Array<Place>>('/api/places')
+        .then(function (response) {
+          // handle success
+          console.log(response.data)
+          places.value = response.data
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error)
+        })
+        .then(function () {
+          // always executed
+        })
+    }
 
     const sanitizedFilter = computed(() => placesFilter.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase())
     const filteredPlaces = computed(() => {
@@ -63,7 +99,18 @@ export default defineComponent({
     const hideCreateDialog = () => { createDialogOpened.value = false }
     const createPlace = function () {
       axios.post('/api/places', newPlace)
-        .then(response => console.log(response))
+        .then(response => {
+          console.log(response)
+          resetPlace()
+          fetchPlaces()
+          createDialogOpened.value = false
+        })
+    }
+
+    const resetPlace = function () {
+      newPlace.id = undefined
+      newPlace.code = ''
+      newPlace.name = ''
     }
 
     watch(() => newPlace.name, (newName) => {
@@ -73,11 +120,15 @@ export default defineComponent({
     return {
       createPlace,
       createDialogOpened,
+      deleteEntity,
+      fetchPlaces,
       filteredPlaces,
       hideCreateDialog,
+      idToDelete,
       newPlace,
       showCreateDialog,
-      placesFilter
+      placesFilter,
+      visibility
     }
   }
 })

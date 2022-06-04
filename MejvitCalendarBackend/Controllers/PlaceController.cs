@@ -2,15 +2,16 @@
 using Microsoft.AspNetCore.Mvc;
 using MejvitCalendarBackend.Data;
 using MejvitCalendarBackend.Models;
+using MejvitCalendarBackend.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace MejvitCalendarBackend.Controllers
 {
     [ApiController]
-    public class PlacesController : Controller
+    public class PlaceController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        public PlacesController(ApplicationDbContext context)
+        public PlaceController(ApplicationDbContext context)
         {
             this._context = context;
         }
@@ -32,7 +33,18 @@ namespace MejvitCalendarBackend.Controllers
                 return NotFound();
             }
 
-            Place? place = await _context.Places.FirstOrDefaultAsync(p => p.Code == code);
+            PlaceEntity? placeEntity = await _context.Places.FirstOrDefaultAsync(p => p.Code == code);
+            Place? place = null;
+
+            if (placeEntity != null)
+            {
+                place = new Place()
+                {
+                    Code = placeEntity.Code,
+                    Name = placeEntity.Name,
+                    Description = placeEntity.Description
+                };
+            }
             if (place == null)
             {
                 return NotFound();
@@ -48,7 +60,12 @@ namespace MejvitCalendarBackend.Controllers
         {
             try
             {
-                _context.Places.Add(place);
+                PlaceEntity placeEntity = new PlaceEntity()
+                {
+                    Code = place.Code,
+                    Name = place.Name
+                };
+                _context.Places.Add(placeEntity);
                 await _context.SaveChangesAsync();
                 return Ok(place.Id);
             }
@@ -56,6 +73,26 @@ namespace MejvitCalendarBackend.Controllers
             {
                 return Conflict(e.Message);
             }
+        }
+
+        [Route("api/places/{id}")]
+        [HttpPut]
+        public async Task<IActionResult> Update(int id, [FromBody] Place updatedPlace)
+        {
+            if (updatedPlace == null || updatedPlace.Id != id)
+            {
+                return BadRequest();
+            }
+
+            var place = await _context.Places.FindAsync(id);
+            if (place == null)
+            {
+                return NotFound();
+            }
+            _context.Entry<PlaceEntity>(place).CurrentValues.SetValues(updatedPlace);
+            await _context.SaveChangesAsync();
+
+            return new NoContentResult();
         }
 
         [Route("api/places/{id}")]

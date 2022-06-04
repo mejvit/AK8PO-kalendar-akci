@@ -1,16 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace MejvitCalendarBackend.Models
+﻿namespace MejvitCalendarBackend.Models
 {
-    [Table("EventCategory")]
-    public class EventCategory : Entity
+    public class EventCategory
     {
-        [Required]
-        public string Code { get; set; }
+        public int Id { get; set; }
+        public string? Code { get; set; }
 
-        [Required]
-        public string Name { get; set; }
-
+        public string? Name { get; set; }
     }
 }

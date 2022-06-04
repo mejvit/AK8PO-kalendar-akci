@@ -1,10 +1,10 @@
 <template>
 <div class="time-picker-wrapper">
   <div class="hours time-part">
-    <input type="text" :value="String(mDate.getHours()).padStart(2, '0')" ref="hours" placeholder="hh"
+    <input type="text" :value="String(mDate.getHours()).padStart(2, '0')" ref="hoursRef" placeholder="hh"
       @focus="$event.target.select()"
     />
-    <button @click="() => { $refs.hours.select(); toggleHours() }" tabindex="-1">
+    <button @click="() => { $refs.hoursRef.select(); toggleHours() }" tabindex="-1">
       <i v-if="hoursSelectionVisible" class="bi bi-caret-up-fill"></i>
       <i v-else class="bi bi-caret-down-fill"></i>
     </button>
@@ -15,10 +15,10 @@
     </ul>
   </div>
   <div class="minutes time-part">
-    <input type="text" :value="String(mDate.getMinutes()).padStart(2, '0')" id="minuteSelector" ref="minutes" placeholder="mm"
+    <input type="text" :value="String(mDate.getMinutes()).padStart(2, '0')" id="minuteSelector" ref="minutesRef" placeholder="mm"
       @focus="$event.target.select()"
     />
-    <button @click="() => { $refs.minutes.select(); toggleMinutes() }" tabindex="-1">
+    <button @click="() => { $refs.minutesRef.select(); toggleMinutes() }" tabindex="-1">
       <i v-if="minutesSelectionVisible" class="bi bi-caret-up-fill"></i>
       <i v-else class="bi bi-caret-down-fill"></i>
     </button>
@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, toRef } from 'vue'
+import { defineComponent, onMounted, ref, toRef } from 'vue'
 
 export default defineComponent({
   name: 'TimePicker',
@@ -46,6 +46,7 @@ export default defineComponent({
   setup (props, context) {
     const hoursSelectionVisible = ref<boolean>(false)
     const minutesSelectionVisible = ref<boolean>(false)
+
     const hours = ref<Array<number>>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23])
     const minutes = ref<Array<number>>([
       0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -79,6 +80,11 @@ export default defineComponent({
       context.emit('update:modelValue', mDate.value)
     }
 
+    onMounted(() => {
+      console.log('tets', mDate.value)
+      console.log('test', hours.value)
+    })
+
     return {
       hours,
       hoursSelectionVisible,
@@ -111,18 +117,22 @@ export default defineComponent({
 }
 
 .selector {
-  position: fixed;
-  width: 2em;
-  margin: 2.8rem 0 0 -2rem;
+  position: absolute;
+  width: 4em;
+  margin: 2rem 0 0 -1.1rem;
   padding: 0;
   height: 50vh;
   overflow-y: scroll;
+  overflow-x: hidden;
+  background: $white;
+  z-index: 9999;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
 }
 
 .selector li {
-  width: 3rem;
   font-size: 1.2rem;
-  text-align: right;
+  text-align: center;
 }
 
 .selector li.time-part-item {

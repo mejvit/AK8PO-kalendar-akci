@@ -1,10 +1,11 @@
 ﻿namespace MejvitCalendarBackend.Models
 {
-    public class EventInstance : Entity
+    public class EventInstance
     {
-        public EventCategory Category { get; set; }
+        public DateTime? StartDateTime { get; set; }
+        public DateTime? EndDateTime { get; set; }
+        public string? Name { get; set; }
 
-        public EventBase EventBase { get; set; }
-        public Place Place { get; set; }
+        public EventBase? EventBase { get; set; }
     }
 }

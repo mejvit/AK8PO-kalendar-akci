@@ -21,7 +21,17 @@ const routes: Array<RouteRecordRaw> = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Events.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/events/EventsWrapper.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('../views/events/EventsIndex.vue')
+      },
+      {
+        path: ':id',
+        component: () => import('../views/events/EventsDetail.vue')
+      }
+    ]
   },
   {
     path: '/places',

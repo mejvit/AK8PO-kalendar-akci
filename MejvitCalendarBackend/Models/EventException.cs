@@ -1,11 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace MejvitCalendarBackend.Models
+﻿namespace MejvitCalendarBackend.Models
 {
-    [Table("EventException")]
-    public class EventException : Entity
+    public class EventException
     {
-        public EventBase Event { get; set; }
-        public DateTime Date { get; set; }
+        public int? EventId { get; set; }
+        public EventBase? Event { get; set; }
+        public DateTime? Date { get; set; }
     }
 }

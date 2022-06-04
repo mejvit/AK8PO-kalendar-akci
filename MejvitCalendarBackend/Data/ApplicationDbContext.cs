@@ -1,4 +1,4 @@
-﻿using MejvitCalendarBackend.Models;
+﻿using MejvitCalendarBackend.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace MejvitCalendarBackend.Data
@@ -9,9 +9,10 @@ namespace MejvitCalendarBackend.Data
         {
 
         }
-        public DbSet<Place> Places { get; set; }
-        public DbSet<EventBase> Events { get; set; }
-        public DbSet<EventCategory> Categories { get; set; }
+        public DbSet<PlaceEntity> Places { get; set; }
+        public DbSet<EventBaseEntity> Events { get; set; }
+        public DbSet<EventCategoryEntity> Categories { get; set; }
+        public DbSet<EventInstanceEntity> EventInstances { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

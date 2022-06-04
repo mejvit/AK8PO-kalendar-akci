@@ -1,5 +1,6 @@
 ﻿using MejvitCalendarBackend.Data;
 using MejvitCalendarBackend.Models;
+using MejvitCalendarBackend.Models.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -30,9 +31,14 @@ namespace MejvitCalendarBackend.Controllers
         {
             try
             {
-                _context.Categories.Add(category);
+                EventCategoryEntity eventCategoryEntity = new EventCategoryEntity()
+                {
+                    Code = category.Code,
+                    Name = category.Name
+                };
+                _context.Categories.Add(eventCategoryEntity);
                 await _context.SaveChangesAsync();
-                return Ok(category.Id);
+                return Ok(eventCategoryEntity.Id);
             }
             catch (Exception e)
             {
@@ -49,12 +55,13 @@ namespace MejvitCalendarBackend.Controllers
                 return BadRequest();
             }
 
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
+            var categoryEntity = await _context.Categories.FindAsync(id);
+            if (categoryEntity == null)
             {
                 return NotFound();
             }
-            _context.Entry<EventCategory>(category).CurrentValues.SetValues(updatedCategory);
+
+            _context.Entry<EventCategoryEntity>(categoryEntity).CurrentValues.SetValues(updatedCategory);
             await _context.SaveChangesAsync();
 
             return new NoContentResult();

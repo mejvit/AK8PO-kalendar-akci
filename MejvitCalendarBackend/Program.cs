@@ -18,6 +18,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 app.UseRouting();
+//app.UseStatusCodePages(async context => { context.HttpContext.Response.ContentType = "application/json"; await context.HttpContext.Response.WriteAsync("{\"result:\" \"Not Found\"}"); });
 app.UseAuthorization();
 app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 app.UseSpaStaticFiles();
@@ -37,7 +38,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+//if (!app.Environment.IsDevelopment())
+//{
+    app.UseExceptionHandler("/error");
+//}
 
 app.MapControllers();
 

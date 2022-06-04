@@ -23,7 +23,7 @@ export default defineComponent({
   grid-template-rows: 3rem auto;
 }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+// #nav a.router-link-exact-active {
+
+// }
 </style>

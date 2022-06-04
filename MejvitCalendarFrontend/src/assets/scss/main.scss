@@ -1,24 +1,40 @@
+@import 'colors';
+
 body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Open Sans', sans-serif;
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* Buttons */
+button {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.1em;
+  padding: 0.5em 1em;
+  border: 0;
+  color: #333333;
+  background: #eaeaea;
+  transition: 0.3s;
+  border-radius: 0.25rem;
   
-  button {
-    font-family: 'Open Sans', sans-serif;
-  }
-  
-  button:hover {
+  &:hover {
+    background: #cacaca;
     cursor: pointer;
+    transition: 0.3s;
   }
-  
+
+  i {
+    border-radius: 0.25rem;
+  }   
+}
+
   .button-add, .button-save {
     border: 0;
     padding: 0.5em 1em 0.5em 1em;
-    background: #4abd48;
+    background: $primary-green;
     color: #ffffff;
-    text-shadow: 1px 1px #3a9439;
+    text-shadow: 1px 1px $primary-green-darker;
     transition: 0.2s;
     font-size: 1em;
   }
@@ -29,7 +45,7 @@ body {
   }
   
   .button-add:hover, .button-save:hover {
-    background: #3a9439;
+    background: $primary-green-darker;
     cursor: pointer;
     transition: 0.2s;
   }
@@ -39,9 +55,15 @@ body {
     font-size: 2em;
     display: inline-block;
     position: absolute;
-      margin-top: -0.33em;
-      margin-left: -1em;
+    margin-top: -0.33em;
+    margin-left: -1em;
   }
+
+a.button-add {
+  text-decoration: none;
+  display: block;
+  border-radius: 0.25rem;
+}
   
   
   .input-group {
@@ -106,7 +128,7 @@ body {
     display: flex;
   }
   
-  .main input[type=text], .main input[type=number] {
+  .main input[type=text], .main input[type=number], .main select {
     font-family: 'Open Sans', sans-serif;
     color: #333;
     background: #eaeaea;
@@ -120,10 +142,21 @@ body {
     transition: 0.3s;
   }
   
-  .main input[type=text]:focus, .main input[type=number]:focus {
+  .main input[type=text]:focus, .main input[type=number]:focus, .main select:focus {
     outline: 0;
     border-bottom: 2px solid #9b6ba7;
     transition: 0.3s;
+  }
+
+  .main select option {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 1em 0.2em;
+  }
+
+  .main select option:nth-child(2n) {
+    background-color: $white;
   }
   
   .main .date {
@@ -137,51 +170,90 @@ body {
   }
   
   
-  /* Buttons */
-  button {
-    font-size: 1.1em;
-    padding: 0.5em 1em;
-    border: 0;
-    color: #333333;
-    background: #eaeaea;
-    transition: 0.3s;
-    border-radius: 0.25rem;
 
-    i {
-        border-radius: 0.25rem;
-    }
-  }
-  
-  button:hover {
-    background: #cacaca;
-    cursor: pointer;
-    transition: 0.3s;
-  }
   
   .button-confirm i {
-    color: #3a9439;
+    color: $primary-green-darker;
   }
   
-  .button-dismiss i {
-    color: #dc143c;
+  .button-dismiss {
+    i {
+      color: $danger-red;
+    }
+
+    &:hover {
+      color: #eaeaea;
+      background: $danger-red;
+
+      i {
+        color: #eaeaea;
+        transition: 0.3s;
+      }
+    }
   }
   
   .button-confirm:hover {
     color: #eaeaea;
-    background: #3a9439;
+    background: $primary-green-darker;
   }
-  
-  .button-dismiss:hover {
-    color: #eaeaea;
-    background: #dc143c;
-  }
+
   
   .button-confirm:hover i {
     color: #eaeaea;
     transition: 0.3s;
   }
   
-  .button-dismiss:hover i {
-    color: #eaeaea;
-    transition: 0.3s;
+section.detail-form {
+  ul {
+    padding-left: 0em;
+    li {
+      list-style-type: none;
+      display: flex;
+      flex-direction: row;
+      justify-content: stretch;
+      align-items: stretch;
+      gap: 1em;
+      margin: 0.5em 0;
+
+      >span {
+        position: relative;
+        top: 1.5em;
+      }
+      label {
+        flex-grow: 1;
+        span {
+          display: block;
+        }
+        
+        span.inline {
+          display: inline;
+        }
+
+        input {
+          display: block;
+          width: 100%;
+        }
+
+        input[type=checkbox] {
+          display: inline;
+          width: auto;
+        }
+        select {
+          display: block;
+          width: 100%;
+        }
+        
+        .w-auto {
+          width: auto;
+        }
+      }
+
+      @for $i from 0 through 10 {
+        label.grow-#{$i} {
+          flex-grow: $i;
+        }
+      }
+
+    }
   }
+}

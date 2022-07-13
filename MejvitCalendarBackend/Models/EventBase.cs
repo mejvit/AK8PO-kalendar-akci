@@ -14,6 +14,7 @@
         public EventCategory? Category { get; set; }
 
         public List<EventException>? EventExceptions { get; set; }
+        public string? DefaultStreamUrl { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
     }

@@ -17,6 +17,9 @@ namespace MejvitCalendarBackend.Models.Entities
         [ForeignKey("EventCategory")]
         public int CategoryId { get; set; }
 
+        [Url]
+        public string? StreamUrl { get; set; }
+
         public PlaceEntity Place { get; set; }
 
         public EventCategoryEntity Category { get; set; }

@@ -8,7 +8,7 @@
       <i v-if="hoursSelectionVisible" class="bi bi-caret-up-fill"></i>
       <i v-else class="bi bi-caret-down-fill"></i>
     </button>
-    <ul v-if="hoursSelectionVisible" class="selector">
+    <ul v-show="hoursSelectionVisible" class="selector">
       <li v-for="(hour, i) in hours" :key="i" class="time-part-item">
         <span @click="setHours(hour)">{{ String(hour).padStart(2, '0') }}</span>
       </li>
@@ -22,7 +22,7 @@
       <i v-if="minutesSelectionVisible" class="bi bi-caret-up-fill"></i>
       <i v-else class="bi bi-caret-down-fill"></i>
     </button>
-    <ul v-if="minutesSelectionVisible" class="selector">
+    <ul v-show="minutesSelectionVisible" class="selector">
       <li v-for="(minute, i) in minutes" :key="i" class="time-part-item">
         <span @click="setMinutes(minute)">{{ String(minute).padStart(2, '0') }}</span>
       </li>
@@ -99,8 +99,8 @@ export default defineComponent({
   }
 })
 </script>
+<style lang="scss" scoped>
 
-<style scoped>
 .time-picker-wrapper {
   box-sizing: border-box;
   display: inline-flex;
@@ -108,69 +108,73 @@ export default defineComponent({
   align-items: stretch;
   background: #eaeaea;
   border-radius: 2px;
-}
-.time-part {
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
-}
 
-.selector {
-  position: absolute;
-  width: 4em;
-  margin: 2rem 0 0 -1.1rem;
-  padding: 0;
-  height: 50vh;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  background: $white;
-  z-index: 9999;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  .time-part {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    width: 4.5rem;
+  }
 
-}
+  input[type=text] {
+    outline: 0;
+    margin: 0;
+    /*padding: 0.2rem 0.2rem 0.2rem 0.4rem;*/
+    /* font-size: 1.5rem; */
+    text-align: center;
+  }
 
-.selector li {
-  font-size: 1.2rem;
-  text-align: center;
-}
+  button {
+    width: auto;
+    font-size: 0.8rem;
+    color: #666666;
+    background: transparent;
+    border: 0;
+    border-left: 0;
+  }
+  .selector {
+    position: absolute;
+    width: 4em;
+    margin: 2rem 0 0 -1.1rem;
+    padding: 0;
+    height: 50vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background: $white;
+    z-index: 9999;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    color: #333;
 
-.selector li.time-part-item {
-  display: block;
-  padding: 0.2rem;
-  list-style: none;
-  width: 100%;
-}
+    li {
+      font-size: 1.1em;
+      text-align: center;
+      margin: 0;
 
-.selector li.time-part-item:nth-child(2n+1) {
-  background: #ffffff;
-}
+      &.time-part-item {
+        display: block;
+        list-style: none;
+        width: 100%;
+        padding: 0.5em 0;
+        transition: 0.3s;
 
-.selector li.time-part-item:nth-child(2n) {
-  background: #eaeaea;
-}
+        &:nth-child(2n+1) {
+          background: #ffffff;
+        }
 
-.selector li span:hover {
-  cursor: pointer;
-}
-
-.time-part input[type=text]
-{
-  display: block;
-  width: 2rem;
-  outline: 0;
-  margin: 0;
-  /*padding: 0.2rem 0.2rem 0.2rem 0.4rem;*/
-  /* font-size: 1.5rem; */
-  text-align: center;
-}
-
-.time-part button {
-  display: block;
-  font-size: 0.8rem;
-  color: #666666;
-  background: transparent;
-  border: 0;
-  border-left: 0;
+        &:nth-child(2n) {
+          background: #eaeaea;
+        }
+        &:hover {
+          background: #cacaca;
+          cursor: pointer;
+          transition: 0.3s;
+        }
+      }
+      span {
+        position: static;
+      }
+    }
+  }
 }
 </style>

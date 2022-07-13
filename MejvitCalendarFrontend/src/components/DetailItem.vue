@@ -1,10 +1,10 @@
 <template>
   <div class="detail-item">
-    <div class="description">
-      <router-link :to="to" class="link">
-        <strong>{{ name }}</strong>
-      </router-link>
-    </div>
+    <router-link :to="to" class="link">
+      <span>
+        <slot></slot>
+      </span>
+    </router-link>
     <button class="delete" @click="$emit('deleteClick', id)">
       <i class="bi bi-trash3-fill"></i>
     </button>
@@ -17,7 +17,6 @@ import { defineComponent, ref } from 'vue'
 export default defineComponent({
   name: 'DetailItem',
   props: {
-    name: String,
     id: Number,
     to: String
   },
@@ -36,58 +35,62 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .detail-item {
     display: flex;
     align-items: stretch;
+    justify-content: center;
     color: #333;
-  }
+    height: 3em;
+    box-sizing: border-box;
 
-  .detail-item:first-of-type {
-    margin-top: 1em;
-    border-top: 3px solid #eaeaea;
-  }
+    &:first-of-type {
+      margin-top: 1em;
+      border-top: 3px solid #eaeaea;
+    }
 
-  .detail-item:last-of-type {
-    margin-bottom: 1em;
-    border-bottom: 3px solid #eaeaea;
-  }
+    &:last-of-type {
+      margin-bottom: 1em;
+      border-bottom: 3px solid #eaeaea;
+    }
 
-  .detail-item:nth-child(2n) {
-    background: #eaeaea;
-  }
+    &:nth-child(2n) {
+      background: #eaeaea;
+    }
 
-  .description {
-    flex-grow: 8;
-  }
+    &:hover {
+      background: #cacaca;
+    }
 
-  .description .link {
-    display: inline-block;
-    width: 100%;
-    color: #333;
-    text-decoration: none;
-    padding: 0.5em 0 0.5em 0.5em;
-  }
-  .description .link:hover {
-    background: #cacaca;
-  }
-  .save, .delete {
-    background: transparent;
-    border: 0;
-    padding: 0 0.5em;
-    margin: 0.5em;
-  }
+    .link {
+      flex-grow: 1;
+      color: #333;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
 
-  .save i, .delete i {
-    color: #333;
-  }
+      span {
+        padding-left: 1em;
+        font-weight: bold;
+      }
+    }
 
-  .save:hover, .delete:hover {
-    cursor: pointer;
-    background: #eaeaea;
-  }
+    .delete {
+      background: transparent;
+      border: 0;
+      flex-grow: 0;
+      width: 3em;
+      &:hover {
+        cursor: pointer;
 
-  .detail-item:nth-child(2n) .save:hover, .detail-item:nth-child(2n) .delete:hover {
-    background: #fff;
+        i {
+          color: $danger-red;
+        }
+      }
+
+      i {
+        color: #333;
+      }
+    }
   }
 </style>

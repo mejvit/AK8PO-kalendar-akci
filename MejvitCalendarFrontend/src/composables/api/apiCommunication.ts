@@ -10,7 +10,7 @@ export function deleteEntity (id: number, endpoint: string): Promise<any> {
       })
       .catch(function (error) {
         // handle error
-        console.log(error)
+        console.error(error)
         reject(error)
       })
   })

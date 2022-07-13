@@ -28,8 +28,19 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../views/events/EventsIndex.vue')
       },
       {
-        path: ':id',
-        component: () => import('../views/events/EventsDetail.vue')
+        path: 'create',
+        component: () => import('../views/events/EventsDetail.vue'),
+        props: { editMode: false }
+      },
+      {
+        path: ':place',
+        component: () => import('../views/events/EventsIndex.vue'),
+        props: route => ({ placeCode: route.params.place })
+      },
+      {
+        path: ':place/:id',
+        component: () => import('../views/events/EventsDetail.vue'),
+        props: route => ({ editMode: true, placeCode: route.params.place, eventInstanceId: parseInt((route.params.id as string)) })
       }
     ]
   },
@@ -39,7 +50,7 @@ const routes: Array<RouteRecordRaw> = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/places/Places.vue'),
+    component: () => import(/* webpackChunkName: "about" */ '../views/places/PlacesWrapper.vue'),
     children: [
       {
         path: '',

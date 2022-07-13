@@ -54,12 +54,12 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, reactive, ref, watch } from 'vue'
-import { EventCategory } from '../composables/EventCategory'
-import { convertNameToCode } from '../composables/Parser'
-import MainArea from '../components/MainArea.vue'
-import DeleteModal from '../components/DeleteModal.vue'
-import EditModal from '../components/EditModal.vue'
-import EditableItem from '../components/EditableItem.vue'
+import { EventCategory } from '@/composables/EventCategory'
+import { convertNameToCode } from '@/composables/Parser'
+import MainArea from '@/components/MainArea.vue'
+import DeleteModal from '@/components/DeleteModal.vue'
+import EditModal from '@/components/EditModal.vue'
+import EditableItem from '@/components/EditableItem.vue'
 import axios from 'axios'
 
 export default defineComponent({
@@ -82,7 +82,7 @@ export default defineComponent({
     })
     watch(() => activeCategory.name, (newName) => {
       if (createModeActive.value) {
-        activeCategory.code = convertNameToCode(newName)
+        activeCategory.code = convertNameToCode(newName as string)
       }
     })
 
@@ -150,9 +150,9 @@ export default defineComponent({
         editCodeActive.value = false
         createModeActive.value = false
         const filteredCategory: EventCategory = categories.value.filter((cat: EventCategory) => cat.id === id)[0]
-        activeCategory.id = filteredCategory.id
-        activeCategory.code = filteredCategory.code
-        activeCategory.name = filteredCategory.name
+        // activeCategory.id = filteredCategory.id
+        // activeCategory.code = filteredCategory.code
+        // activeCategory.name = filteredCategory.name
       } else {
         activeCategory.id = undefined
         activeCategory.code = ''

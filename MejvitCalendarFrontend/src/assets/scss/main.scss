@@ -65,7 +65,6 @@ a.button-add {
   border-radius: 0.25rem;
 }
   
-  
   .input-group {
       display: table;
   }
@@ -159,19 +158,6 @@ a.button-add {
     background-color: $white;
   }
   
-  .main .date {
-    display: inline-block;
-    width: 6em;
-    margin: 0em 0.5em;
-  }
-  
-  .main .date:first-of-type {
-    margin-left: 0em;
-  }
-  
-  
-
-  
   .button-confirm i {
     color: $primary-green-darker;
   }
@@ -215,11 +201,16 @@ section.detail-form {
       gap: 1em;
       margin: 0.5em 0;
 
+      input[type=radio] {
+        border: 0px;
+        width: 1.5em;
+        height: 1.5em;
+      }
       >span {
         position: relative;
         top: 1.5em;
       }
-      label {
+      label, div {
         flex-grow: 1;
         span {
           display: block;
@@ -229,7 +220,7 @@ section.detail-form {
           display: inline;
         }
 
-        input {
+        input[type=text] {
           display: block;
           width: 100%;
         }
@@ -238,6 +229,12 @@ section.detail-form {
           display: inline;
           width: auto;
         }
+
+        input[type=number] {
+          display: block;
+          width: 3em;
+        }
+
         select {
           display: block;
           width: 100%;
@@ -248,8 +245,30 @@ section.detail-form {
         }
       }
 
+      label.inline, div.inline {
+        span {
+          display: inline-block;
+        }
+
+        input[type=text] {
+          display: inline-block;
+        }
+
+        input[type=number] {
+          width: 3em;
+          display: inline-block;
+          margin: 0 0.2em;
+        }
+
+        select {
+          display: inline-block;
+          width: auto;
+          margin: 0 0.2em;
+        }
+      }
+
       @for $i from 0 through 10 {
-        label.grow-#{$i} {
+        label.grow-#{$i}, div.grow-#{$i} {
           flex-grow: $i;
         }
       }

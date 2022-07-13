@@ -5,57 +5,73 @@
     <filter-input v-model="placesFilter"/>
   </div>
   <detail-item
-    v-for="(place, i) in filteredPlaces" :key="i"
-    :id="place.id"
-    :name="place.name" :to="'/events/'+place.code"
-    @delete-click="(id) => { visibility.deleteModal = true; idToDelete = id }"
-  />
+    v-for="(event, i) in filteredEvents" :key="i"
+    :id="event.id"
+    :to="'/events/'+event.eventBase.place.code+'/'+event.id"
+    @delete-click="(id) => { visibility.deleteEventModal = true; idToDelete = id }"
+  >{{getFormattedTime(event.startDateTime)}}<br /> {{event.eventBase.place.name}}, {{ event.eventBase.name }}</detail-item>
 
-  <delete-modal
+  <!-- <delete-modal
     :id="idToDelete"
     :visible="visibility.deleteModal"
     @dismiss-click="() => { visibility.deleteModal = false }"
     @confirm-click="(id) => { deleteEntity(id, '/api/event-instances/').then(() => {visibility.deleteModal = false; fetchPlaces()}) }"
-  />
+  /> -->
+
+  <div v-if="visibility.deleteEventModal">
+    <button @click="deleteSingleEvent">Smazat pouze tuto událost</button>
+    <button @click="deleteAllEvents">Smazat všechny události</button>
+  </div>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, onMounted, reactive, ref, watch } from 'vue'
 import axios from 'axios'
-import { Place } from '../../composables/Place'
-import { deleteEntity } from '../../composables/api/apiCommunication'
-import { convertNameToCode } from '../../composables/Parser'
+import { deleteEntity } from '@/composables/api/apiCommunication'
 import DeleteModal from '@/components/DeleteModal.vue'
 import DetailItem from '@/components/DetailItem.vue'
 import FilterInput from '@/components/inputs/FilterInput.vue'
+import { EventInstance } from '@/composables/EventInstance'
 
 export default defineComponent({
   name: 'PlacesDetail',
-  components: { DeleteModal, DetailItem, FilterInput },
-
-  setup () {
+  components: { DetailItem, FilterInput },
+  props: {
+    placeCode: {
+      type: String,
+      required: false
+    }
+  },
+  setup (props) {
     const visibility = reactive({
-      deleteModal: false
+      deleteModal: false,
+      deleteEventModal: false
     })
-    const newPlace = reactive<Place>({ id: undefined, name: '', code: '' })
     const placesFilter = ref<string>('')
-    const places = ref<Array<Place>>([])
+    const events = ref<Array<EventInstance>>([])
     const idToDelete = ref<number>()
 
     onMounted(() => {
-      fetchPlaces()
+      fetchEvents(props.placeCode)
+      console.log(props.placeCode)
     })
 
-    const fetchPlaces = function () {
-      axios.get<Array<Place>>('/api/event-instances')
+    watch(
+      () => props.placeCode,
+      code => {
+        fetchEvents(code as string)
+      }
+    )
+    const fetchEvents = function (placeCode: string | undefined) {
+      axios.get<Array<EventInstance>>('/api/event-instances' + (placeCode !== undefined ? '/' + placeCode : ''))
         .then(function (response) {
           // handle success
           console.log(response.data)
-          places.value = response.data
+          events.value = response.data
         })
         .catch(function (error) {
           // handle error
-          console.log(error)
+          console.error(error)
         })
         .then(function () {
           // always executed
@@ -63,42 +79,41 @@ export default defineComponent({
     }
 
     const sanitizedFilter = computed(() => placesFilter.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase())
-    const filteredPlaces = computed(() => {
-      if (places.value.length > 0) {
-        return places.value.filter(place => place.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes(sanitizedFilter.value))
+    const filteredEvents = computed(() => {
+      if (events.value.length > 0) {
+        return events.value.filter(event =>
+          event.eventBase?.place?.name?.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes(sanitizedFilter.value) ||
+          event.eventBase?.name?.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes(sanitizedFilter.value)
+        )
       }
-      return places.value
+      return events.value
     })
 
     const createDialogOpened = ref<boolean>(false)
-    const createPlace = function () {
-      axios.post('/api/event-instances', newPlace)
-        .then(response => {
-          console.log(response)
-          resetPlace()
-          fetchPlaces()
-          createDialogOpened.value = false
-        })
+
+    const deleteAllEvents = function () {
+      const baseEventId = events.value.find(evt => evt.id)?.eventBase?.id
+
+      deleteEntity(baseEventId as number, '/api/events/').then(() => fetchEvents)
     }
 
-    const resetPlace = function () {
-      newPlace.id = undefined
-      newPlace.code = ''
-      newPlace.name = ''
+    const deleteSingleEvent = function () {
+      deleteEntity(idToDelete.value as number, '/api/event-instances/').then(() => fetchEvents)
     }
 
-    watch(() => newPlace.name, (newName) => {
-      newPlace.code = convertNameToCode(newName)
-    })
-
+    const getFormattedTime = function (dateTime: Date) {
+      const dt = new Date(dateTime)
+      return dt.getDate() + '.' + (dt.getMonth() + 1) + '.' + dt.getFullYear() + ' ' + dt.getHours() + ':' + (dt.getMinutes() < 10 ? '0' : '') + dt.getMinutes()
+    }
     return {
-      createPlace,
       createDialogOpened,
+      deleteAllEvents,
       deleteEntity,
-      fetchPlaces,
-      filteredPlaces,
+      deleteSingleEvent,
+      fetchEvents,
+      filteredEvents,
+      getFormattedTime,
       idToDelete,
-      newPlace,
       placesFilter,
       visibility
     }

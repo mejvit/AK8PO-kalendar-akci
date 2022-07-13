@@ -35,7 +35,7 @@
 import { useRoute } from 'vue-router'
 import { defineComponent, onMounted, ref, watch } from 'vue'
 import axios from 'axios'
-import { Place } from '../../composables/Place'
+import { Place } from '@/composables/Place'
 
 export default defineComponent({
   name: 'PlacesDetail',
@@ -47,7 +47,7 @@ export default defineComponent({
     onMounted(() => {
       fetchPlace()
     })
-    const placeName = ref<string>('')
+    const placeName = ref<string | undefined>('')
     const fetchPlace = () => {
       axios.get<Place>('/api/places/code=' + route.params.code)
         .then(function (response) {
@@ -57,7 +57,7 @@ export default defineComponent({
         })
         .catch(function (error) {
           // handle error
-          console.log(error)
+          console.error(error)
         })
         .then(function () {
           // always executed
@@ -83,7 +83,7 @@ export default defineComponent({
           })
           .catch(function (error) {
             // handle error
-            console.log(error)
+            console.error(error)
           })
           .then(function () {
             // always executed

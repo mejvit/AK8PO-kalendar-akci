@@ -7,9 +7,9 @@
   <detail-item
     v-for="(place, i) in filteredPlaces" :key="i"
     :id="place.id"
-    :name="place.name" :to="'/places/'+place.code"
+    :to="'/places/'+place.code"
     @delete-click="(id) => { visibility.deleteModal = true; idToDelete = id }"
-  />
+  >{{ place.name }}</detail-item>
   <edit-modal
     :visible="createDialogOpened" @update:visible="hideCreateDialog" title="Vytvořit organizaci"
     @dismiss-click="() => { createDialogOpened = false }"
@@ -45,11 +45,11 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, reactive, ref, watch } from 'vue'
 import axios from 'axios'
-import { Place } from '../../composables/Place'
-import { deleteEntity } from '../../composables/api/apiCommunication'
-import { convertNameToCode } from '../../composables/Parser'
+import { Place } from '@/composables/Place'
+import { deleteEntity } from '@/composables/api/apiCommunication'
+import { convertNameToCode } from '@/composables/Parser'
 import DeleteModal from '@/components/DeleteModal.vue'
-import EditModal from '../../components/EditModal.vue'
+import EditModal from '@/components/EditModal.vue'
 import DetailItem from '@/components/DetailItem.vue'
 import FilterInput from '@/components/inputs/FilterInput.vue'
 
@@ -79,7 +79,7 @@ export default defineComponent({
         })
         .catch(function (error) {
           // handle error
-          console.log(error)
+          console.error(error)
         })
         .then(function () {
           // always executed
@@ -89,7 +89,7 @@ export default defineComponent({
     const sanitizedFilter = computed(() => placesFilter.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase())
     const filteredPlaces = computed(() => {
       if (places.value.length > 0) {
-        return places.value.filter(place => place.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes(sanitizedFilter.value))
+        return places.value.filter(place => place.name?.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes(sanitizedFilter.value))
       }
       return places.value
     })
@@ -114,7 +114,7 @@ export default defineComponent({
     }
 
     watch(() => newPlace.name, (newName) => {
-      newPlace.code = convertNameToCode(newName)
+      newPlace.code = convertNameToCode(newName as string)
     })
 
     return {

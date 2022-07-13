@@ -71,10 +71,10 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue'
 import axios from 'axios'
-import { Place } from '../composables/Place'
-import SideBar from '../components/SideBar.vue' // @ is an alias to /src
-import MainArea from '../components/MainArea.vue' // @ is an alias to /src
-import TimePicker from '../components/inputs/TimePicker.vue' // @ is an alias to /src
+import { Place } from '@/composables/Place'
+import SideBar from '@/components/SideBar.vue' // @ is an alias to /src
+import MainArea from '@/components/MainArea.vue' // @ is an alias to /src
+import TimePicker from '@/components/inputs/TimePicker.vue' // @ is an alias to /src
 import Datepicker from 'vue3-datepicker'
 import { cs } from 'date-fns/locale'
 import { Options as RRuleOptions, RRule } from 'rrule'
@@ -117,7 +117,7 @@ export default defineComponent({
       })
       .catch(function (error) {
         // handle error
-        console.log(error)
+        console.error(error)
       })
       .then(function () {
         // always executed

@@ -29,6 +29,19 @@ namespace MejvitCalendarBackend.Controllers
             return Ok(eventBase);
         }
 
+        [Route("{id}")]
+        [HttpGet]
+        public async Task<IActionResult> Get(int id)
+        {
+            var eventBaseEntity = await _context.Events.FindAsync(id);
+
+            if (eventBaseEntity == null)
+            {
+                return NotFound();
+            }
+            return Ok(eventBaseEntity);
+        }
+
         [Route("")]
         [HttpPost]
         public async Task<IActionResult> Post(EventBase eventBase)
@@ -104,6 +117,23 @@ namespace MejvitCalendarBackend.Controllers
                 await transaction.RollbackAsync();
                 return Conflict(e.Message);
             }
+        }
+
+        [Route("{id}")]
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var eventBaseEntity = await _context.Events.FindAsync(id);
+
+            if (eventBaseEntity == null)
+            {
+                return NotFound();
+            }
+
+            _context.Events.Remove(eventBaseEntity);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }

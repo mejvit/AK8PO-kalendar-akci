@@ -14,7 +14,7 @@ Opakující se události
  - [x] událost se může opakovat s denní, týdenní či roční frekvencí
  - [ ] systém musí umožnit smazat 0 až všechny výskyty opakující se události
  - [ ] systém musí umožnit úpravu termínu konání 0 až všech výskytů opakující se události
- - [ ] systém musí umožnit název 0 až všech výskytů opakující se události
+ - [ ] systém musí umožnit měnit název 0 až všech výskytů opakující se události
 
 Organizace
 
